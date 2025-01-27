@@ -1,0 +1,51 @@
+void LinkedListADT::sortList() {
+    start = mergeSort(start);
+}
+
+node* LinkedListADT::mergeSort(node* head) {
+    if (!head || !head->next) {
+        return head; // Base case: 0 or 1 node.
+    }
+
+    // Split the list into two halves.
+    node* middle = getMiddle(head);
+    node* nextOfMiddle = middle->next;
+    middle->next = NULL; // Break the list into two halves.
+
+    // Recursively sort the two halves.
+    node* left = mergeSort(head);
+    node* right = mergeSort(nextOfMiddle);
+
+    // Merge the sorted halves.
+    return merge(left, right);
+}
+
+node* LinkedListADT::getMiddle(node* head) {
+    if (!head) return head;
+
+    node* slow = head;
+    node* fast = head;
+
+    while (fast->next && fast->next->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+node* LinkedListADT::merge(node* left, node* right) {
+    if (!left) return right;
+    if (!right) return left;
+
+    node* result = NULL;
+
+    if (left->item <= right->item) {
+        result = left;
+        result->next = merge(left->next, right);
+    } else {
+        result = right;
+        result->next = merge(left, right->next);
+    }
+
+    return result;
+}
